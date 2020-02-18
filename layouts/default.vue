@@ -1,41 +1,63 @@
 <template>
   <v-app app dark>
-  <v-navigation-drawer app>
+  <v-navigation-drawer app v-model="drawer" mobile-break-point="650px">
+    <v-list subheader>
+      <v-subheader>Recent chat</v-subheader>
+
+      <v-list-item
+        v-for="u in users"
+        :key="u.id"
+        @click.prevent
+      >
+        
+        <v-list-item-content>
+          <v-list-item-title v-text="u.name"></v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-icon>
+          <v-icon :color="u.id === user.id ? 'success' : 'grey'">chat_bubble</v-icon>
+        </v-list-item-icon>
+      </v-list-item>
+    </v-list>
   </v-navigation-drawer>
 
   <v-app-bar
     app
-
   >
-    <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    <v-btn icon >
+    <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-btn icon @click="exit">
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
-    <v-toolbar-title>Title</v-toolbar-title>
+    <v-toolbar-title>Chat room {{user.room}}</v-toolbar-title>
   </v-app-bar>
 
-
-  <!-- Sizes your content based upon application components -->
   <v-content>
-
-    <!-- Provides the application the proper gutter -->
-    <v-container fluid>
-
-      <!-- If using vue-router -->
+    <div style="height: 100%">
       <nuxt/>
-    </v-container>
+    </div>
   </v-content>
 
-  <v-footer app>
-    <!-- -->
-  </v-footer>
+
 </v-app>
 </template>
 
 <script>
-import { mdiArrowLeft } from '@mdi/js'; 
-import {mapState} from 'vuex'
+// import { mdiArrowLeft, mdiMessage, mdiArrowRight } from '@mdi/js'; 
+import {mapState, mapMutations} from 'vuex'
 export default {
-  computed: mapState(['user'])
+  data: () => ({
+    drawer: true
+  }),
+  computed: mapState(['user', 'users']),
+  methods: {
+    ...mapMutations(['clearData']),
+    exit() {
+      this.$socket.emit('userLeft', this.user.id, () => {
+        this.$router.push('/?message=leftChat')
+        this.clearData()
+      })
+      
+    }
+  }
 }
 </script>
