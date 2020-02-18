@@ -2,7 +2,7 @@
   <v-app app dark>
   <v-navigation-drawer app v-model="drawer" mobile-break-point="650px">
     <v-list subheader>
-      <v-subheader>Recent chat</v-subheader>
+      <v-subheader>Список участников</v-subheader>
 
       <v-list-item
         v-for="u in users"
@@ -15,7 +15,7 @@
         </v-list-item-content>
 
         <v-list-item-icon>
-          <v-icon :color="u.id === user.id ? 'success' : 'grey'">chat_bubble</v-icon>
+          <v-icon :color="u.id === user.id ? 'success' : 'grey'">mdi-arrow-left</v-icon>
         </v-list-item-icon>
       </v-list-item>
     </v-list>
